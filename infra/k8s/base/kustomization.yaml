@@ -1,0 +1,6 @@
+resources:
+  - server
+  - db
+
+configurations:
+  - config.yaml
