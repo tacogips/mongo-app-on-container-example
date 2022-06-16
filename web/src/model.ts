@@ -5,7 +5,7 @@ export enum Status {
 
 export interface TodoId {
   $oid: string;
-
+}
 
 export interface Todo {
   _id?: TodoId;
