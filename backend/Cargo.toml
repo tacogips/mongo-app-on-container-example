@@ -18,3 +18,7 @@ tower = { version = "0.4.12", features = ["util", "timeout"] }
 tower-http = { version = "0.3.4", features = ["trace", "cors"] }
 tracing = "0.1.35"
 tracing-subscriber = { version = "0.3.11", features = ["env-filter"] }
+
+# Current Mozilla trust data adapted to the legacy TLS API; see vendor/SECURITY.md.
+[patch.crates-io]
+webpki-roots-0-22-3 = { package = "webpki-roots", path = "../vendor/webpki-roots-0.22.3" }
