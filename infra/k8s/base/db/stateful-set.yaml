@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  serviceName: mongodb
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongodb
+
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:4.4
+        command: ["mongod", "--replSet", "app-replica-set", "--bind_ip_all"]
+        ports:
+          - containerPort: 27017
+
+        volumeMounts:
+          - name: mongodb-vc
+            mountPath: /data/db
+
+        livenessProbe:
+          exec:
+            command:
+            - bash
+            - -c
+            - 'test $(echo "rs.status().ok || rs.initiate({_id:\"app-replica-set\",members:[{_id:0,host:\"mongodb-0:27017\"},{_id:1,host:\"mongodb-1:27017\"},{_id:2,host:\"mongodb-2:27017\"}]}).ok " | mongo --port 27017 --quiet) -eq 1'
+
+          initialDelaySeconds: 10
+          periodSeconds: 30
+
+      terminationGracePeriodSeconds: 60
+      restartPolicy: Always
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-vc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi

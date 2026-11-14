@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-app-on-container-example
+
+spec:
+  selector:
+    matchLabels:
+     pod-name: mongo-app-on-container-example-pod
+
+  replicas: 1
+
+  strategy:
+    type: Recreate
+
+  template:
+      metadata:
+        labels:
+          pod-name: mongo-app-on-container-example-pod
+      spec:
+        containers:
+          - image: tacogips/mongo-app-on-container-example:latest
+            name: mongo-app-on-container-example-container
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
+            ports:
+              - containerPort: 5000
+                name: web

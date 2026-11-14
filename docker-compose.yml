@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  backend:
+    #image: tacogips/mongo-app-on-container-example:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        #BUILD_FLAG: "--release"
+        #BUILD_TARGET: release
+        BUILD_FLAG: ""
+        BUILD_TARGET: debug
+    ports:
+      - 5000:5000
+
+  mongodb-0:
+    image: mongo:4.4
+    container_name: mongo0_example_container
+    command: ["--replSet", "app-replica-set", "--bind_ip_all", "--port", "27017"]
+    volumes:
+      - ./data/mongo-0:/volume/mongo
+    ports:
+      - 30001:27017
+    healthcheck:
+      test: test $$(echo "rs.initiate({_id:'app-replica-set',members:[{_id:0,host:\"mongodb-0:27017\"},{_id:1,host:\"mongodb-1:27017\"},{_id:2,host:\"mongodb-2:27017\"}]}).ok || rs.status().ok" | mongo --port 27017 --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+
+  mongodb-1:
+    image: mongo:4.4
+    container_name: mongo1_example_container
+    command: ["--replSet", "app-replica-set", "--bind_ip_all", "--port", "27017"]
+    volumes:
+      - ./data/mongo-1:/volume/mongo
+    ports:
+      - 30002:27017
+
+  mongodb-2:
+    image: mongo:4.4
+    container_name: mongo2_example_container
+    command: ["--replSet", "app-replica-set", "--bind_ip_all", "--port", "27017"]
+    volumes:
+      - ./data/mongo-2:/volume/mongo
+    ports:
+      - 30003:27017

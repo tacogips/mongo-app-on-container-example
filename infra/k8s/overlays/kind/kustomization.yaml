@@ -1,0 +1,13 @@
+resources:
+  - ../../base
+
+commonLabels:
+  app: mongo-example
+  env: prd
+
+patchesStrategicMerge:
+  - sever-deployment.yaml
+
+images:
+  - name: tacogips/mongo-app-on-container-example:latest
+    newTag: latest

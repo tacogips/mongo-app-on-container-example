@@ -1,0 +1,5 @@
+resources:
+  - stateful-set.yaml
+  - mongo-0.yaml
+  - mongo-1.yaml
+  - mongo-2.yaml
