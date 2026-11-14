@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-app-on-container-example
+
+spec:
+  replicas: 1
+  template:
+      spec:
+        containers:
+          - name: mongo-app-on-container-example-container
+            resources:
+              requests:
+                memory: "512Mi"
+                cpu: "250m"
